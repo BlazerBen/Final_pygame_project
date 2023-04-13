@@ -3,7 +3,7 @@ import pygame
 #WINDOW
 screenwidth=1800
 screenheight=1000
-screen = pygame.display.set_mode((screenheight,screenwidth))
+screen = pygame.display.set_mode((screenwidth,screenheight))
 width = screen.get_width()
 height = screen.get_height()
 

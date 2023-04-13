@@ -11,20 +11,21 @@ class Player:
         self.y=y
         self.width=width
         self.height=height
-        
-    def main(self, window):
+    def draw_player(self, window):
         pygame.draw.rect(window, (0,0,0), (self.x,self.y,self.width,self.height))
-    def movement(self, vel):
-        if var.keys[var.LSHIFT] or var.keys[pygame.K_RSHIFT]:
-            vel=30
-        if var.keys[var.a] and self.x>vel:
+    def movement(self, keys, vel):
+        if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+            vel=vel*1.5
+        if keys[pygame.K_a]and self.x>vel: 
             self.x-=vel
-        if var.keys[var.d] and self.x<var.screenwidth-self.width:
+        if keys[pygame.K_d]:
             self.x+=vel
-        if var.keys[var.w] and self.y>vel:
+        if keys[pygame.K_w]  and self.y>vel:
             self.y-=vel
-        if var.keys[var.s] and self.y<var.screenheight-self.height:
+            print('w')
+        if keys[pygame.K_s]:
             self.y+=vel
+            print('s')
         
 
 

@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "__pycache__",
+			"path": "../../pygame2023/Final_project_Fall2022/__pycache__"
+		},
+		{
+			"name": "Final_pygame_project",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
