@@ -22,10 +22,8 @@ class Player:
             self.x+=vel
         if keys[pygame.K_w]  and self.y>vel:
             self.y-=vel
-            print('w')
         if keys[pygame.K_s]:
             self.y+=vel
-            print('s')
         
 
 
