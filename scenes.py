@@ -2,7 +2,7 @@ import pygame
 import var
 import sys
 from entity import player
-pygame.init()    
+pygame.init()
 
 class SceneBase:
     def __init__(self):
@@ -88,10 +88,10 @@ class Title(SceneBase):
 
 class GameScene(SceneBase):
     def __init__(self):
-        self.pc=player.Player(var.screenwidth/2,var.screenheight/2, 32,32)
+        self.pc=player.Player(var.screenwidth/2,var.screenheight/2, var.screenwidth/50,var.screenwidth/50)
         SceneBase.__init__(self)
     def ProcessInput(self, events, pressed_keys):
-        vel = 5
+        vel = var.screenwidth/500
         self.pc.movement(pygame.key.get_pressed(), vel)
     def Update(self):
         
