@@ -2,7 +2,7 @@ import pygame
 import var
 import sys
 from entity import player
-pygame.init()
+pygame.init()    
 
 class SceneBase:
     def __init__(self):
