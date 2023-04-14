@@ -1,8 +1,9 @@
 import pygame
-
+pygame.init()
 #WINDOW
-screenwidth=1800
-screenheight=1000
+infoObject = pygame.display.Info()
+screenwidth=infoObject.current_w
+screenheight=infoObject.current_h
 screen = pygame.display.set_mode((screenwidth,screenheight))
 width = screen.get_width()
 height = screen.get_height()
