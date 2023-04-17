@@ -94,13 +94,12 @@ class GameScene(SceneBase):
         vel = var.screenwidth/500
         self.pc.movement(pygame.key.get_pressed(), vel)
     def Update(self):
-        
-        self.pc.draw_player(var.screen)    
+        self.pc.draw(var.screen)    
     def Render(self, screen):
         var.clock.tick(60)
         #window
         var.screen.fill((100,150,90))
-        self.pc.draw_player(var.screen)
+        self.pc.draw(var.screen)
         pygame.display.update()
     
     def quit_execute(self):
