@@ -89,13 +89,22 @@ class Title(SceneBase):
 
 class GameScene(SceneBase):
     def __init__(self):
-        self.pc=player.Player(var.screenwidth/2,var.screenheight/2, var.screenwidth/50,var.screenwidth/50)
+        self.pc=player.Player(var.screenwidth/2,var.screenheight/2, var.screenwidth/50,var.screenwidth/50, (0,0,0))
         self.bad=enemy.Enemy(0,0, var.screenwidth/50,var.screenwidth/50)
+        self.collide = pygame.Rect.colliderect(self.pc.rect, self.bad.rect)
         SceneBase.__init__(self)
     def ProcessInput(self, events, pressed_keys):
         vel = var.screenwidth/500
-        self.pc.movement(pygame.key.get_pressed(), vel)
-        self.bad.movement(self.pc, vel/2)
+        
+        if not self.collide:
+            self.bad.movement(self.pc, vel/2)
+            self.pc.movement(pygame.key.get_pressed(), vel)
+            
+        
+        else:
+            print('works')
+            
+        
     def Update(self):
         pass
     def Render(self, screen):
@@ -105,6 +114,8 @@ class GameScene(SceneBase):
         self.pc.draw(var.screen)
         self.bad.draw(var.screen)
         self.bad.damage(self.pc)
+        
+        
         pygame.display.update()
     
     def quit_execute(self):

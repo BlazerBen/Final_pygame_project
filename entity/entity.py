@@ -3,7 +3,7 @@ import sys
 import var
 pygame.init()
 
-class Entity:
+class Entity(pygame.sprite.Sprite):
     def __init__(self):
         self.next=self
     def draw(self, window):
