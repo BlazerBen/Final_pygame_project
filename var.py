@@ -31,4 +31,8 @@ events = pygame.event
 button_light = (170,170,170)
 button_dark = (100,100,100)
 white=(255,255,255)
+#enemy
+pygame.font.init()
+font= pygame.font.SysFont('Arial', int(round(screenheight/75)))
+write_damage=font.render('5' , True , button_dark)
 

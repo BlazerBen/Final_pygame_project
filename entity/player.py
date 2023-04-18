@@ -11,6 +11,7 @@ class Player(entity.Entity):
         self.y=y
         self.width=width
         self.height=height
+        self.health=100
     def draw(self, window):
         pygame.draw.rect(window, (0,0,0), (self.x,self.y,self.width,self.height))
     def movement(self, keys, vel):
