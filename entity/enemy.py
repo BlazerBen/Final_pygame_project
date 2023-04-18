@@ -29,19 +29,21 @@ class Enemy(entity.Entity):
             self.y-=vel
         if player.y-player.height>self.y and self.y < var.screenwidth-self.width:
             self.y+=vel
+        self.damage(player)
     def damage(self,player):
         if self.wait:
             self.count+=1
-            if self.count==100:
+            var.screen.blit(self.damage_write, (self.x-15, self.y-15))
+            if self.count==2:
+                var.screen.blit(self.damage_write, (self.x-15, self.y-15))
                 self.wait==False
                 self.count=0
         else:
-            if player.x-5<self.x<player.x+player.width+5 and player.y-5<self.y<player.height+player.y+5 :
+            if player.x-50<self.x<player.x+player.width+50 and player.y-50<self.y<player.height+player.y+50:
+                print('damage')
                 player.health-=5
-                self.show_damage=True
                 self.wait=True
-        if self.show_damage:
-            var.screen.blit(self.damage_write, (self.x-15, self.y-15))
+        
 
 
 

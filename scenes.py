@@ -96,15 +96,15 @@ class GameScene(SceneBase):
         vel = var.screenwidth/500
         self.pc.movement(pygame.key.get_pressed(), vel)
         self.bad.movement(self.pc, vel/2)
-        self.bad.damage(self.pc)
     def Update(self):
-        pass 
+        pass
     def Render(self, screen):
         var.clock.tick(60)
         #window
         var.screen.fill((100,150,90))
         self.pc.draw(var.screen)
         self.bad.draw(var.screen)
+        self.bad.damage(self.pc)
         pygame.display.update()
     
     def quit_execute(self):

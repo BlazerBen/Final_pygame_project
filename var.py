@@ -34,5 +34,5 @@ white=(255,255,255)
 #enemy
 pygame.font.init()
 font= pygame.font.SysFont('Arial', int(round(screenheight/75)))
-write_damage=font.render('5' , True , button_dark)
-
+write_damage=font.render('5' , True , (255,0,0))
+damage_erase=font.render('5' , True , (100,150,90))

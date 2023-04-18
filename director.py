@@ -7,7 +7,6 @@ from entity import player
 import var
 #contains scenes
 import scenes
-s
 title = scenes.Title()
 def run_game(fps, starting_scene):
     pygame.init()
