@@ -2,6 +2,7 @@ import pygame
 import var
 import sys
 from entity import player
+from entity import enemy
 pygame.init()
 
 class SceneBase:
@@ -70,11 +71,11 @@ class Title(SceneBase):
         else:
             pygame.draw.rect(var.screen,var.button_dark,[var.width/2,var.height/3,140,40])
         var.screen.blit(start_text, (var.width/2+50,var.height/3))
-    #quit bottun
+    #quit button
     def quit_execute(self):
         if var.width/2 <= self.mouse[0] <= var.width/2+140 and var.height/2 <= self.mouse[1] <= var.height/2+40:
             sys.exit()
-            pygame.QUIT()  
+            pygame.QUIT()
     def quit_draw(self):
         pygame.font.init()
         font= pygame.font.SysFont('Arial', 35)
@@ -88,7 +89,9 @@ class Title(SceneBase):
 
 class GameScene(SceneBase):
     def __init__(self):
-        self.pc=player.Player(var.screenwidth/2,var.screenheight/2, var.screenwidth/50,var.screenwidth/50)
+        self.pc=player.Player(var.screenwidth/2,var.screenheight/2, var.screenwidth/50,var.screenwidth/50, (0,0,0))
+        self.bad=enemy.Enemy(0,0, var.screenwidth/50,var.screenwidth/50)
+        self.collide = pygame.Rect.colliderect(self.pc.rect, self.bad.rect)
         SceneBase.__init__(self)
     def ProcessInput(self, events, pressed_keys):
         vel = var.screenwidth/500
@@ -98,17 +101,18 @@ class GameScene(SceneBase):
                 self.pc.bullets.append(player.PlayerBullet(self.pc.x,self.pc.y, mouse_x,mouse_y))
         self.pc.movement(pygame.key.get_pressed(), vel)
         
+            
+        
+        
        
     def Update(self):
+        
         self.pc.draw_player(var.screen)    
     def Render(self, screen):
         var.clock.tick(60)
         #window
         var.screen.fill((100,150,90))
-        
         self.pc.draw_player(var.screen)
-        for b in self.pc.bullets:
-            b.main(var.screen)
         pygame.display.update()
     
     def quit_execute(self):
