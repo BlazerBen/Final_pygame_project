@@ -19,8 +19,8 @@ w=pygame.K_w
 enter=pygame.K_RETURN
 #mouse
 click=pygame.MOUSEBUTTONDOWN
-mouse = pygame.mouse.get_pos()
 
+ 
 
 #miscellaneous
 clock=pygame.time.Clock()

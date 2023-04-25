@@ -92,15 +92,23 @@ class GameScene(SceneBase):
         SceneBase.__init__(self)
     def ProcessInput(self, events, pressed_keys):
         vel = var.screenwidth/500
+        for event in events:
+            if event.type== pygame.KEYDOWN and event.key==var.enter:
+                mouse_x,mouse_y= pygame.mouse.get_pos()
+                self.pc.bullets.append(player.PlayerBullet(self.pc.x,self.pc.y, mouse_x,mouse_y))
         self.pc.movement(pygame.key.get_pressed(), vel)
-    def Update(self):
         
+       
+    def Update(self):
         self.pc.draw_player(var.screen)    
     def Render(self, screen):
         var.clock.tick(60)
         #window
         var.screen.fill((100,150,90))
+        
         self.pc.draw_player(var.screen)
+        for b in self.pc.bullets:
+            b.main(var.screen)
         pygame.display.update()
     
     def quit_execute(self):
