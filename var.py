@@ -16,6 +16,7 @@ a=pygame.K_a
 s=pygame.K_s
 d=pygame.K_d
 w=pygame.K_w
+tab=pygame.K_TAB
 enter=pygame.K_RETURN
 #mouse
 click=pygame.MOUSEBUTTONDOWN

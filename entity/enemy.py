@@ -33,7 +33,8 @@ class Enemy(entity.Entity):
             self.y+=vel
         self.damage(player)
     def damage(self,player):
-        if self.wait:
+        pass
+        '''if self.wait:
             self.count+=1
             var.screen.blit(self.damage_write, (self.x-15, self.y-15))
             if self.count==2:
@@ -41,13 +42,10 @@ class Enemy(entity.Entity):
                 self.wait==False
                 self.count=0
         else:
-            if self.rect.colliderect(player.rect):
-                print('works')
-                pygame.draw.rect(var.screen, (250,250,250), (50,250,self.width,self.height))
             if player.x-50<self.x<player.x+player.width+50 and player.y-50<self.y<player.height+player.y+50:
                 print('damage')
                 player.health-=5
-                self.wait=True
+                self.wait=True'''
 
 
 

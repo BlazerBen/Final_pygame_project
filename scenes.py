@@ -91,32 +91,55 @@ class GameScene(SceneBase):
     def __init__(self):
         self.pc=player.Player(var.screenwidth/2,var.screenheight/2, var.screenwidth/50,var.screenwidth/50, (0,0,0))
         self.bad=enemy.Enemy(0,0, var.screenwidth/50,var.screenwidth/50)
-        self.collide = pygame.Rect.colliderect(self.pc.rect, self.bad.rect)
+        self.bullets=[]
         SceneBase.__init__(self)
     def ProcessInput(self, events, pressed_keys):
         vel = var.screenwidth/500
         for event in events:
-            if event.type== pygame.KEYDOWN and event.key==var.enter:
+            if event.type== var.click:
                 mouse_x,mouse_y= pygame.mouse.get_pos()
-                self.pc.bullets.append(player.PlayerBullet(self.pc.x,self.pc.y, mouse_x,mouse_y))
+                self.bullets.append(player.PlayerBullet(self.pc.x,self.pc.y, mouse_x,mouse_y))
+            if event.type== pygame.KEYDOWN and event.key==var.tab:
+                self.SwitchToScene(Pause(GameScene()))
         self.pc.movement(pygame.key.get_pressed(), vel)
-        
-            
-        
-        
-       
+        self.bad.movement(self.pc, vel*.75)
     def Update(self):
         
-        self.pc.draw_player(var.screen)    
+        self.pc.draw(var.screen)    
     def Render(self, screen):
         var.clock.tick(60)
         #window
         var.screen.fill((100,150,90))
-        self.pc.draw_player(var.screen)
+        self.pc.draw(var.screen)
+        self.bad.draw(var.screen)
+        for bullet in self.bullets:
+            bullet.main(var.screen)
         pygame.display.update()
     
     def quit_execute(self):
         pass
     def start_execute(self):
         pass
+
+class Pause(SceneBase):
+    def __init__(self, previous):
+        self.previous= previous
+        SceneBase.__init__(self)
+        self.help=Title()
+    def ProcessInput(self, events, pressed_keys):
+        for event in events:
+            if event.type== pygame.KEYDOWN and event.key==var.tab:
+                self.SwitchToScene(self.previous)
+    def Update(self):
+        pass
+    def Render(self, screen):
+        self.help.mouse=pygame.mouse.get_pos()
+        for event in var.events.get():
+            if event.type==pygame.QUIT:
+                sys.exit()
+                pygame.QUIT()
+            if event.type==var.click:
+                self.quit_execute()
+        self.previous.Render(screen)
+        self.help.quit_draw()
     

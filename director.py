@@ -49,3 +49,4 @@ def run_game(fps, starting_scene):
 def main():    
     run_game(60, title)
 main()
+
