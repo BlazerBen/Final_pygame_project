@@ -5,10 +5,12 @@ from entity import player
 from entity import enemy
 pygame.init()
 
+
+
 class SceneBase:
     def __init__(self):
         self.next = self
-    
+        self.scene_name="uh-oh, you didn't override this in the child class"
     def ProcessInput(self, events, pressed_keys):
         print("uh-oh, you didn't override this in the child class")
 
@@ -23,14 +25,16 @@ class SceneBase:
     
     def Terminate(self):
         self.SwitchToScene(None)
-    def quit_execute():
+    def quit_execute(self):
         print("uh-oh, you didn't override this in the child class")
-    def start_execute():
+    def start_execute(self):
         print("uh-oh, you didn't override this in the child class")
 
 class Title(SceneBase):
     def __init__(self):
         SceneBase.__init__(self)
+        self.scene_name='Title'
+        
     def ProcessInput(self, events, pressed_keys):
         for event in events:
             if event.type== pygame.KEYDOWN and event.key==var.enter:
@@ -38,7 +42,7 @@ class Title(SceneBase):
     def Update(self):
         pass
     def Render(self, screen):
-        var.screen.fill((100,150,90))
+        var.screen.fill(var.background)
         self.mouse = pygame.mouse.get_pos()
         for event in var.events.get():
             if event.type==pygame.QUIT:
@@ -47,7 +51,7 @@ class Title(SceneBase):
             if event.type==var.click:
                 self.quit_execute()
         self.write_title()
-        self.start()
+        self.start('Start')
         self.quit_draw()
         pygame.display.update()
     
@@ -59,18 +63,17 @@ class Title(SceneBase):
         var.screen.blit(title_text, (var.width/2-50,var.height/4))
     #start button
     def start_execute(self):
-        if var.width/2 <= self.mouse[0] <= var.width/2+140 and var.height/3 <= self.mouse[1] <= var.height/3+40:
+        if var.width/2 <= self.mouse[0] <= var.width/2+160 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+40:
             self.SwitchToScene(GameScene()) 
-    def start(self):
+    def start(self, button):
         pygame.font.init()
         font= pygame.font.SysFont('Arial', 35)
-        start_text = font.render('Start' , True , var.white)
-
-        if var.width/2 <= self.mouse[0] <= var.width/2+140 and var.height/3 <= self.mouse[1] <= var.height/3+40:
-            pygame.draw.rect(var.screen,var.button_light,[var.width/2,var.height/3,140,40])
+        start_text = font.render(button , True , var.white)
+        if var.width/2 <= self.mouse[0] <= var.width/2+160 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+40:
+            pygame.draw.rect(var.screen,var.button_light,[var.width/2,var.height/2.5,160,40])
         else:
-            pygame.draw.rect(var.screen,var.button_dark,[var.width/2,var.height/3,140,40])
-        var.screen.blit(start_text, (var.width/2+50,var.height/3))
+            pygame.draw.rect(var.screen,var.button_dark,[var.width/2,var.height/2.5,160,40])
+        var.screen.blit(start_text, (var.width/2+50,var.height/2.5))
     #quit button
     def quit_execute(self):
         if var.width/2 <= self.mouse[0] <= var.width/2+140 and var.height/2 <= self.mouse[1] <= var.height/2+40:
@@ -88,19 +91,21 @@ class Title(SceneBase):
         var.screen.blit(quit_text, (var.width/2+50,var.height/2))
 
 class GameScene(SceneBase):
-    def __init__(self):
-        self.pc=player.Player(var.screenwidth/2,var.screenheight/2, var.screenwidth/50,var.screenwidth/50, (0,0,0))
-        self.bad=enemy.Enemy(0,0, var.screenwidth/50,var.screenwidth/50)
+    def __init__(self, x=var.screenwidth/2, y=var.screenheight/2, e_x=0, e_y=0):
+        self.pc=player.Player(x,y, var.screenwidth/50,var.screenwidth/50, (0,0,0))
+        self.bad=enemy.Enemy(e_x,e_y, var.screenwidth/50,var.screenwidth/50)
         self.bullets=[]
         SceneBase.__init__(self)
+        self.scene_name='GameScene'
     def ProcessInput(self, events, pressed_keys):
         vel = var.screenwidth/500
         for event in events:
             if event.type== var.click:
                 mouse_x,mouse_y= pygame.mouse.get_pos()
                 self.bullets.append(player.PlayerBullet(self.pc.x,self.pc.y, mouse_x,mouse_y))
-            if event.type== pygame.KEYDOWN and event.key==var.tab:
-                self.SwitchToScene(Pause(GameScene()))
+            if pygame.key.get_pressed()[var.escape]:
+                print('Game to pause')
+                self.SwitchToScene(Pause(self))
         self.pc.movement(pygame.key.get_pressed(), vel)
         self.bad.movement(self.pc, vel*.75)
     def Update(self):
@@ -109,7 +114,7 @@ class GameScene(SceneBase):
     def Render(self, screen):
         var.clock.tick(60)
         #window
-        var.screen.fill((100,150,90))
+        var.screen.fill(var.background)
         self.pc.draw(var.screen)
         self.bad.draw(var.screen)
         for bullet in self.bullets:
@@ -121,25 +126,32 @@ class GameScene(SceneBase):
     def start_execute(self):
         pass
 
-class Pause(SceneBase):
+class Pause(Title):
     def __init__(self, previous):
-        self.previous= previous
-        SceneBase.__init__(self)
-        self.help=Title()
+        super().__init__()
+        self.previous=previous
+        self.previous.Render(var.screen)
+        self.scene_name='Pause'
+        
     def ProcessInput(self, events, pressed_keys):
-        for event in events:
-            if event.type== pygame.KEYDOWN and event.key==var.tab:
-                self.SwitchToScene(self.previous)
+       if pygame.key.get_pressed()[var.tab]:
+            var.screen.fill(var.background)
+            self.SwitchToScene()
     def Update(self):
         pass
     def Render(self, screen):
-        self.help.mouse=pygame.mouse.get_pos()
+        self.mouse=pygame.mouse.get_pos()
         for event in var.events.get():
-            if event.type==pygame.QUIT:
-                sys.exit()
-                pygame.QUIT()
             if event.type==var.click:
                 self.quit_execute()
-        self.previous.Render(screen)
-        self.help.quit_draw()
-    
+                self.start_execute()
+        self.start('Resume')
+        self.quit_draw()
+    def start_execute(self):
+        if var.width/2 <= self.mouse[0] <= var.width/2+160 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+40:
+            self.SwitchToScene()
+    def SwitchToScene(self):
+        print('pause to game')
+        self.next=GameScene(self.previous.pc.x, self.previous.pc.y, self.previous.bad.x, self.previous.bad.y)
+
+        

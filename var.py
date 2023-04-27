@@ -1,5 +1,7 @@
 import pygame
 pygame.init()
+
+
 #WINDOW
 infoObject = pygame.display.Info()
 screenwidth=infoObject.current_w
@@ -7,6 +9,7 @@ screenheight=infoObject.current_h
 screen = pygame.display.set_mode((screenwidth,screenheight))
 width = screen.get_width()
 height = screen.get_height()
+background=(100,150,90)
 
 #CONTROLS
 #keyboard
@@ -18,6 +21,7 @@ d=pygame.K_d
 w=pygame.K_w
 tab=pygame.K_TAB
 enter=pygame.K_RETURN
+escape=pygame.K_ESCAPE
 #mouse
 click=pygame.MOUSEBUTTONDOWN
 
