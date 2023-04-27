@@ -8,16 +8,18 @@ import math
 
 
 class Player(entity.Entity):
-    def __init__(self, x,y,width, height, color):
+    def __init__(self, x,y, color):
+        super().__init__()
         self.x=x
         self.y=y
-        self.width=width
-        self.height=height
         self.health=100
+        self.max_health=100
+        self.ratio=self.max_health/self.width
         self.color=color
         self.hitbox=(self.x,self.y,self.width,self.height)
     def draw(self, window):
         self.hitbox=(self.x,self.y,self.width,self.height)
+        self.health_bar()
         pygame.draw.rect(window, self.color,self.hitbox)
     def movement(self, keys, vel):
         if keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:

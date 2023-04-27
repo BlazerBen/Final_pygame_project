@@ -7,18 +7,15 @@ pygame.init()
 
 
 class Enemy(entity.Entity):
-    def __init__(self,x,y,width, height):
-        
+    def __init__(self,x,y):
+        super().__init__()
         self.x=x
         self.y=y
-        self.width=width
-        self.height=height
-        self.wait=False
-        self.show_damage=False
         self.count=0
         self.damage_write=var.write_damage
         self.rect=Rect(self.x,self.y,self.width,self.height)
     def draw(self, window):
+        self.health_bar()
         pygame.draw.rect(window, (250,250,250), (self.x,self.y,self.width,self.height))
     def movement(self, player, vel):
         if player.x > var.screenwidth or player.y > var.screenheight:
@@ -33,20 +30,15 @@ class Enemy(entity.Entity):
             self.y+=vel
         self.damage(player)
     def damage(self,player):
-        pass
-        '''if self.wait:
-            self.count+=1
-            var.screen.blit(self.damage_write, (self.x-15, self.y-15))
-            if self.count==2:
-                var.screen.blit(self.damage_write, (self.x-15, self.y-15))
-                self.wait==False
-                self.count=0
-        else:
+        self.count+=1
+        if self.count>=100:
             if player.x-50<self.x<player.x+player.width+50 and player.y-50<self.y<player.height+player.y+50:
-                print('damage')
-                player.health-=5
-                self.wait=True'''
-
+                player.get_damage(5)
+                self.count=0
+    def update(self, bullet):
+        if bullet.x-50<self.x<bullet.x+self.width+50 and bullet.y-50<self.y<self.height+bullet.y+50:
+            self.get_damage(5)
+            
 
 
 
