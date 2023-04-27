@@ -37,7 +37,10 @@ class Enemy(entity.Entity):
                 self.count=0
     def update(self, bullet):
         if bullet.x-50<self.x<bullet.x+self.width+50 and bullet.y-50<self.y<self.height+bullet.y+50:
-            self.get_damage(5)
+            self.get_damage(2)
+            return True
+        else:
+            return False
             
 
 

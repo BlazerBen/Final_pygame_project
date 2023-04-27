@@ -14,9 +14,12 @@ class Player(entity.Entity):
         self.y=y
         self.health=100
         self.max_health=100
+        self.max_mana=20
+        self.mana=20
         self.ratio=self.max_health/self.width
         self.color=color
         self.hitbox=(self.x,self.y,self.width,self.height)
+        self.point=[]
     def draw(self, window):
         self.hitbox=(self.x,self.y,self.width,self.height)
         self.health_bar()
@@ -32,7 +35,12 @@ class Player(entity.Entity):
             self.y-=vel
         if keys[pygame.K_s]and self.y < var.screenheight-self.height:
             self.y+=vel
-
+    def score(self, x=var.width-var.width/10, y=0, font_size=40):
+        point_font=pygame.font.SysFont('Arial', font_size)
+        point_text=point_font.render(f'Kills: {len(self.point)}' , True , var.white)
+        var.screen.blit(point_text, (x,y))
+    def mana_bar(self):
+        pygame.draw.rect(var.screen, (120,81,169), (self.x, self.y+self.height,self.mana,self.height/5))
 
 class PlayerBullet:
     def __init__(self,x,y, mouse_x,mouse_y):
@@ -47,7 +55,13 @@ class PlayerBullet:
     def main(self, win):
         self.x-=int(self.x_vel)
         self.y-=int(self.y_vel)
-        pygame.draw.circle(win, (255,0,0),(self.x, self.y), var.screenwidth/150)
+        pygame.draw.circle(win, (120,81,169),(self.x, self.y), var.screenwidth/150)
+        
+    def check_pos(self):    
+        if self.x>var.screenwidth or self.x<0 or self.y>var.screenheight or self.y<0:
+            return True
+        else:
+            return False
 
 
 
