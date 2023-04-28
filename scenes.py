@@ -153,8 +153,7 @@ class GameScene(SceneBase):
         for bullet in self.bullets:
             bullet.main(var.screen)
             if bullet.check_pos():
-                if bullet in self.bullets:
-                    self.bullets.remove(bullet)
+                self.bullets.remove(bullet)
             for i in self.bad:
                 if i.update(bullet):
                     if bullet in self.bullets:
