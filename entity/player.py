@@ -7,7 +7,7 @@ from entity import entity
 import math
 
 class Player(entity.Entity):
-    def __init__(self, x,y, color, health=100, mana=20):
+    def __init__(self, x,y, color, health=100, mana=20, kills=0):
         super().__init__()
         self.x=x
         self.y=y
@@ -19,6 +19,8 @@ class Player(entity.Entity):
         self.color=color
         self.hitbox=(self.x,self.y,self.width,self.height)
         self.point=[]
+        for i in range(kills):
+            self.point.append('')
     def draw(self, window):
         self.hitbox=(self.x,self.y,self.width,self.height)
         self.health_bar()
@@ -36,7 +38,8 @@ class Player(entity.Entity):
             self.y+=vel
     def score(self, x=var.width-var.width/10, y=0, font_size=40):
         point_font=pygame.font.SysFont('Arial', font_size)
-        point_text=point_font.render(f'Kills: {len(self.point)}' , True , var.white)
+        self.kill=len(self.point)
+        point_text=point_font.render(f'Kills: {self.kill}' , True , var.white)
         var.screen.blit(point_text, (x,y))
     def mana_bar(self):
         pygame.draw.rect(var.screen, (120,81,169), (self.x, self.y+self.height,self.mana,self.height/5))

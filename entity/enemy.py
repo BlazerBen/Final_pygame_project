@@ -6,16 +6,17 @@ from entity import entity
 pygame.init()
 
 class Enemy(entity.Entity):
-    def __init__(self,x,y):
+    def __init__(self,x,y, color=(250,250,250)):
         super().__init__()
         self.x=x
         self.y=y
         self.count=0
         self.damage_write=var.write_damage
         self.rect=Rect(self.x,self.y,self.width,self.height)
+        self.color=color
     def draw(self, window):
         self.health_bar()
-        pygame.draw.rect(window, (250,250,250), (self.x,self.y,self.width,self.height))
+        pygame.draw.rect(window,self.color , (self.x,self.y,self.width,self.height))
     def movement(self, player, vel):
         if player.x > var.screenwidth or player.y > var.screenheight:
             vel=vel*1.5

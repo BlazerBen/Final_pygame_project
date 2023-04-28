@@ -10,7 +10,8 @@ kills count in top right corner, get the highest kill number, the game is over w
 
 Controls
 click on buttons to activate
-wasd, up left down right(normal movement)
-click to shoot and use mana(wait to refill mana)
-escape is Pause
+wasd: up left down right(normal movement)
+shift: sprint(move at 1.5 speed)
+click: shoot and use mana(wait to refill mana)
+escape: Pause
 

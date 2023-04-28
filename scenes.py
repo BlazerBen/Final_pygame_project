@@ -61,7 +61,7 @@ class Title(SceneBase):
     def write_title(self):
         pygame.font.init()
         title_font= pygame.font.SysFont('Arial', 60)
-        title_text = title_font.render('Game_name' , True , var.white)
+        title_text = title_font.render('Mystic Meadow' , True , var.white)
         var.screen.blit(title_text, (var.width/2-50,var.height/4))
     #start button
     def start_execute(self):
@@ -93,17 +93,18 @@ class Title(SceneBase):
         var.screen.blit(quit_text, (var.width/2+50,var.height/2))
 
 class GameScene(SceneBase):
-    def __init__(self, x=var.screenwidth/2, y=var.screenheight/2, e_cord=0, number=10, health=100, mana=20):
-        self.pc=player.Player(x,y, (0,0,0), health, mana)
+    def __init__(self, x=var.screenwidth/2, y=var.screenheight/2, e_cord=0, number=10, health=100, mana=20, kills=0):
+        self.pc=player.Player(x,y, (0,0,0), health, mana, kills)
         self.bad=[]
         self.number=number
         
         if e_cord==0:
             for i in range(number):
-                self.bad.append(enemy.Enemy(x/(i+1), 0))
+                bad_color=random.choices(range(256), k=3)
+                self.bad.append(enemy.Enemy(x/(i+1), 0, bad_color))
         else:
             for i in e_cord:
-                self.bad.append(enemy.Enemy(i.x,i.y))
+                self.bad.append(enemy.Enemy(i.x,i.y, i.color))
             
         self.bullets=[]
         SceneBase.__init__(self)
@@ -132,7 +133,8 @@ class GameScene(SceneBase):
                 self.bad.remove(i)
                 self.pc.point.append(i)
                 self.pc.get_health(5)
-                self.bad.append(enemy.Enemy(0, 0))
+                bad_color=random.choices(range(256), k=3)
+                self.bad.append(enemy.Enemy(0, 0, bad_color))
         if self.pc.mana<self.pc.max_mana:
             self.pc.mana+=.025
         if self.pc.mana>=self.pc.max_mana:
@@ -263,7 +265,7 @@ class Pause(Title):
             e_cord=[]
             for i in self.previous.bad:
                 e_cord.append(i)
-            self.next=GameScene(self.previous.pc.x, self.previous.pc.y, e_cord, self.previous.number, self.previous.pc.health, self.previous.pc.mana)
+            self.next=GameScene(self.previous.pc.x, self.previous.pc.y, e_cord, self.previous.number, self.previous.pc.health, self.previous.pc.mana, self.previous.pc.kill)
     def gameover(self):
         pygame.font.init()
         font= pygame.font.SysFont('Arial', 72)
