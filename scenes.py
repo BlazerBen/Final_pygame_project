@@ -93,16 +93,17 @@ class Title(SceneBase):
         var.screen.blit(quit_text, (var.width/2+50,var.height/2))
 
 class GameScene(SceneBase):
-    def __init__(self, x=var.screenwidth/2, y=var.screenheight/2, e_cord=0, number=10):
-        self.pc=player.Player(x,y, (0,0,0))
+    def __init__(self, x=var.screenwidth/2, y=var.screenheight/2, e_cord=0, number=10, health=100, mana=20):
+        self.pc=player.Player(x,y, (0,0,0), health, mana)
         self.bad=[]
         self.number=number
-        for i in range(number):
-            if e_cord==0:
+        
+        if e_cord==0:
+            for i in range(number):
                 self.bad.append(enemy.Enemy(x/(i+1), 0))
-            else:
-                for i in e_cord:
-                    self.bad.append(enemy.Enemy(i.x,i.y))
+        else:
+            for i in e_cord:
+                self.bad.append(enemy.Enemy(i.x,i.y))
             
         self.bullets=[]
         SceneBase.__init__(self)
@@ -130,6 +131,7 @@ class GameScene(SceneBase):
             if i.health==0:
                 self.bad.remove(i)
                 self.pc.point.append(i)
+                self.pc.get_health(5)
                 self.bad.append(enemy.Enemy(0, 0))
         if self.pc.mana<self.pc.max_mana:
             self.pc.mana+=.025
@@ -261,7 +263,7 @@ class Pause(Title):
             e_cord=[]
             for i in self.previous.bad:
                 e_cord.append(i)
-            self.next=GameScene(self.previous.pc.x, self.previous.pc.y, e_cord, self.previous.number)
+            self.next=GameScene(self.previous.pc.x, self.previous.pc.y, e_cord, self.previous.number, self.previous.pc.health, self.previous.pc.mana)
     def gameover(self):
         pygame.font.init()
         font= pygame.font.SysFont('Arial', 72)

@@ -7,14 +7,14 @@ from entity import entity
 import math
 
 class Player(entity.Entity):
-    def __init__(self, x,y, color):
+    def __init__(self, x,y, color, health=100, mana=20):
         super().__init__()
         self.x=x
         self.y=y
-        self.health=100
+        self.health=health
         self.max_health=100
         self.max_mana=20
-        self.mana=20
+        self.mana=mana
         self.ratio=self.max_health/self.width
         self.color=color
         self.hitbox=(self.x,self.y,self.width,self.height)
