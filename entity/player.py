@@ -6,7 +6,6 @@ pygame.init()
 from entity import entity
 import math
 
-
 class Player(entity.Entity):
     def __init__(self, x,y, color):
         super().__init__()
@@ -62,7 +61,3 @@ class PlayerBullet:
             return True
         else:
             return False
-
-
-
-

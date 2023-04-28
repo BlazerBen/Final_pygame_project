@@ -29,7 +29,3 @@ class Entity(pygame.sprite.Sprite):
             self.health=self.max_health
     def health_bar(self):
         pygame.draw.rect(var.screen, (255,0,0), (self.x, self.y-self.height/5,self.health/self.ratio,self.height/5))
-
-
-
-

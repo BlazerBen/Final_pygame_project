@@ -5,7 +5,6 @@ from pygame.locals import *
 from entity import entity
 pygame.init()
 
-
 class Enemy(entity.Entity):
     def __init__(self,x,y):
         super().__init__()
@@ -41,7 +40,3 @@ class Enemy(entity.Entity):
             return True
         else:
             return False
-            
-
-
-

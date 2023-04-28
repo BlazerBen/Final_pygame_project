@@ -1,7 +1,6 @@
 import pygame
 pygame.init()
 
-
 #WINDOW
 infoObject = pygame.display.Info()
 screenwidth=infoObject.current_w
@@ -24,8 +23,6 @@ enter=pygame.K_RETURN
 escape=pygame.K_ESCAPE
 #mouse
 click=pygame.MOUSEBUTTONDOWN
-
- 
 
 #miscellaneous
 clock=pygame.time.Clock()
