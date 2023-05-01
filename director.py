@@ -1,24 +1,26 @@
 import pygame
-import sys
-import math
-#Contains player class
-from entity import player
-#contains global variables
+#necessary for all pygame commands
 import var
-#contains scenes
+#contains global variables
 import scenes
+#contains scenes
 
 title = scenes.Title()
 
-
-def run_game(fps, starting_scene):
+def run_game(starting_scene):
+    '''runs the pygame while loop
+        Parameters:
+            starting_scene(class): class object of the scene that starts the game
+        Returns:
+            none
+    '''
     pygame.init()
     screen = var.screen
     clock = pygame.time.Clock()
 
     active_scene = starting_scene
 
-    while active_scene != None: 
+    while active_scene is not None:
         # Event filtering
         filtered_events = []
         for event in pygame.event.get():
@@ -33,18 +35,15 @@ def run_game(fps, starting_scene):
                 active_scene.quit_execute()
                 active_scene.start_execute()
             if quit_attempt:
-                active_scene.Terminate()
+                active_scene.terminate()
             else:
                 filtered_events.append(event)
-        
-        active_scene.ProcessInput(filtered_events, var.keys)
-        active_scene.Update()
-        active_scene.Render(screen)
-        
+        active_scene.process_input(filtered_events, var.keys)
+        active_scene.update()
+        active_scene.render(screen)
         active_scene = active_scene.next
         pygame.display.flip()
-        clock.tick(fps)
+        clock.tick(60)
 
-def main():    
-    run_game(60, title)
-main()
+if __name__=='__main__':
+    run_game(title)

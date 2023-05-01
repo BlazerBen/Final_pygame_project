@@ -9,40 +9,115 @@ pygame.init()
 
 
 class SceneBase:
+    """
+    A class that served as a base for all scene classes
+
+    ...
+
+    Attributes
+    ----------
+    self.next
+    Methods
+    process_input():
+        proccesses incoming inputs
+    update():
+        updates objects
+    render():
+        draws screen display
+    quit_execute():
+        executes a quit function
+    start_execute():
+        executes a start/resume function
+    switch_to_scene(next_scene):
+        switches to next scene
+    terminate():
+        terminates program
+    -------
+    """
     def __init__(self):
         self.next = self
         self.scene_name="uh-oh, you didn't override this in the child class"
-    def ProcessInput(self, events, pressed_keys):
-        print("uh-oh, you didn't override this in the child class")
+    def process_input(self, events, pressed_keys):
+        '''
+        proccesses incoming inputs
 
-    def Update(self):
+        Parameters
+        ----------
+        events
+            pygame events
+        pressed_keys
+            pygame pressed keys
+        '''
         print("uh-oh, you didn't override this in the child class")
+    def update(self):
+        '''
+        updates objects
 
-    def Render(self, screen):
+        Parameters
+        ----------
+        none
+        '''
         print("uh-oh, you didn't override this in the child class")
+    def render(self, screen):
+        '''
+        draws screen display
 
-    def SwitchToScene(self, next_scene):
+        Parameters
+        ----------
+        screen
+            SCREENDISPLAY
+        '''
+        print("uh-oh, you didn't override this in the child class")
+    def switch_to_scene(self, next_scene):
+        '''
+        switched active scene
+
+        Parameters
+        ----------
+        next_scene : scene object
+            new scene
+        '''
         self.next = next_scene
-    
-    def Terminate(self):
-        self.SwitchToScene(None)
+    def terminate(self):
+        '''
+        terminates program
+
+        Parameters
+        ----------
+        none
+        '''
+        self.switch_to_scene(None)
     def quit_execute(self):
+        '''
+        executes a quit function
+
+        Parameters
+        ----------
+        none
+        '''
         print("uh-oh, you didn't override this in the child class")
     def start_execute(self):
+        '''
+        executes a start/resume function
+
+        Parameters
+        ----------
+        none
+        '''
         print("uh-oh, you didn't override this in the child class")
 
 class Title(SceneBase):
     def __init__(self):
         SceneBase.__init__(self)
         self.scene_name='Title'
-        
-    def ProcessInput(self, events, pressed_keys):
+        self.mouse = pygame.mouse.get_pos()
+    def process_input(self, events, pressed_keys):
         for event in events:
             if event.type== pygame.KEYDOWN and event.key==var.enter:
-                self.SwitchToScene(Difficulty())
-    def Update(self):
+                self.switch_to_scene(Difficulty())
+    def update(self):
         pass
-    def Render(self, screen):
+    def render(self, screen):
         var.screen.fill(var.background)
         self.mouse = pygame.mouse.get_pos()
         for event in var.events.get():
@@ -56,18 +131,30 @@ class Title(SceneBase):
         self.start('Start')
         self.quit_draw()
         pygame.display.update()
-    
-    #title
     def write_title(self):
+        '''
+        Writes title
+
+        Parameters
+        ----------
+        none
+        '''
         pygame.font.init()
         title_font= pygame.font.SysFont('Arial', 60)
         title_text = title_font.render('Mystic Meadow' , True , var.white)
         var.screen.blit(title_text, (var.width/2-50,var.height/4))
-    #start button
     def start_execute(self):
         if var.width/2 <= self.mouse[0] <= var.width/2+160 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+40:
-            self.SwitchToScene(Difficulty()) 
+            self.switch_to_scene(Difficulty()) 
     def start(self, button):
+        '''
+        draws the start button
+
+        Parameters
+        ----------
+        button : str
+            button text
+        '''
         pygame.font.init()
         font= pygame.font.SysFont('Arial', 35)
         start_text = font.render(button , True , var.white)
@@ -76,12 +163,18 @@ class Title(SceneBase):
         else:
             pygame.draw.rect(var.screen,var.button_dark,[var.width/2,var.height/2.5,var.width/10,var.height/25])
         var.screen.blit(start_text, (var.width/2+50,var.height/2.5))
-    #quit button
     def quit_execute(self):
         if var.width/2 <= self.mouse[0] <= var.width/2+var.width/10 and var.height/2 <= self.mouse[1] <= var.height/2+var.height/25:
             sys.exit()
             pygame.QUIT()
     def quit_draw(self):
+        '''
+        draws the quit button
+
+        Parameters
+        ----------
+        none
+        '''
         pygame.font.init()
         font= pygame.font.SysFont('Arial', 35)
         quit_text = font.render('Quit' , True , var.white)
@@ -93,23 +186,41 @@ class Title(SceneBase):
         var.screen.blit(quit_text, (var.width/2+50,var.height/2))
 
 class GameScene(SceneBase):
+    """
+    A class for the game scene
+
+    ...
+
+    Attributes
+    ----------
+    pc : class obj
+        player class
+    bad : list
+        list of enemy classes
+    number : int
+        number of enemies
+    self.bullets : list
+        list of bullets on screen
+
+    Methods
+    nothing not in SceneBase
+    -------
+    """
     def __init__(self, x=var.screenwidth/2, y=var.screenheight/2, e_cord=0, number=10, health=100, mana=20, kills=0):
         self.pc=player.Player(x,y, (0,0,0), health, mana, kills)
         self.bad=[]
         self.number=number
-        
         if e_cord==0:
             for i in range(number):
                 bad_color=random.choices(range(256), k=3)
                 self.bad.append(enemy.Enemy(x/(i+1), 0, bad_color))
         else:
             for i in e_cord:
-                self.bad.append(enemy.Enemy(i.x,i.y, i.color))
-            
+                self.bad.append(enemy.Enemy(i.x,i.y, i.color))         
         self.bullets=[]
         SceneBase.__init__(self)
         self.scene_name='GameScene'
-    def ProcessInput(self, events, pressed_keys):
+    def process_input(self, events, pressed_keys):
         vel = var.screenwidth/500
         for event in events:
             if event.type== var.click:
@@ -119,15 +230,14 @@ class GameScene(SceneBase):
                     self.bullets.append(player.PlayerBullet(self.pc.x,self.pc.y, mouse_x,mouse_y))
             if pygame.key.get_pressed()[var.escape]:
                 self.bullets=[]
-                self.SwitchToScene(Pause(self))
+                self.switch_to_scene(Pause(self))
         if self.pc.health>0:
             self.pc.movement(pygame.key.get_pressed(), vel)
         else:
-            self.SwitchToScene(Pause(self, False))
+            self.switch_to_scene(Pause(self, False))
         for i in self.bad:
             i.movement(self.pc, vel*.5)
-
-    def Update(self):
+    def update(self):
         for i in self.bad:
             if i.health==0:
                 self.bad.remove(i)
@@ -138,10 +248,8 @@ class GameScene(SceneBase):
         if self.pc.mana<self.pc.max_mana:
             self.pc.mana+=.025
         if self.pc.mana>=self.pc.max_mana:
-            self.pc.mana=self.pc.max_mana
-        
-                
-    def Render(self, screen):
+            self.pc.mana=self.pc.max_mana          
+    def render(self, screen):
         var.clock.tick(60)
         #window
         var.screen.fill(var.background)
@@ -158,30 +266,45 @@ class GameScene(SceneBase):
                 if i.update(bullet):
                     if bullet in self.bullets:
                         self.bullets.remove(bullet)
-
         pygame.display.update()
-    
     def quit_execute(self):
         pass
     def start_execute(self):
         pass
 
 class Difficulty(SceneBase):
+    """
+    A class for the scene where you chose you difficulty
+
+    ...
+
+    Attributes
+    ----------
+    font : pygame font
+        font for buttons
+    mouse : pygame mouse position
+        gets mouse position
+    Methods
+    easy_button():
+        draws easy button
+    normal_button():
+        draws normal button
+    hard_button():
+        draws hard button
+    -------
+    """
     def __init__(self):
-        self.scene_name="Difficulty"
         pygame.font.init()
         self.font= pygame.font.SysFont('Arial', 35)
         SceneBase.__init__(self)
-        self.vertical_left_button=var.width/2
-
-    def ProcessInput(self, events, pressed_keys):
-        #self.SwitchToScene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 10))
+        self.mouse = pygame.mouse.get_pos()
+    def process_input(self, events, pressed_keys):
+        #self.switch_to_scene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 10))
+        pass
+    def update(self):
         pass
 
-    def Update(self):
-        pass
-
-    def Render(self, screen):
+    def render(self, screen):
         var.screen.fill((0,0,0))
         self.mouse = pygame.mouse.get_pos()
         self.easy_button()
@@ -190,58 +313,96 @@ class Difficulty(SceneBase):
     def quit_execute(self):
         pass
     def start_execute(self):
-        if self.vertical_left_button-(self.vertical_left_button/10) <= self.mouse[0] <= self.vertical_left_button+self.vertical_left_button/5-self.vertical_left_button/10 and var.height/5 <= self.mouse[1] <= var.height/5+var.height/35:
+        if var.width/2-(var.width/2/10) <= self.mouse[0] <= var.width/2+var.width/2/5-var.width/2/10 and var.height/5 <= self.mouse[1] <= var.height/5+var.height/35:
             #easy
-            self.SwitchToScene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 5))
-        if self.vertical_left_button-(self.vertical_left_button/10) <= self.mouse[0] <= self.vertical_left_button+self.vertical_left_button/5-self.vertical_left_button/10 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+var.height/25:
+            self.switch_to_scene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 5))
+        if var.width/2-(var.width/2/10) <= self.mouse[0] <= var.width/2+var.width/2/5-var.width/2/10 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+var.height/25:
             #Normal
-            self.SwitchToScene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 10))
-        if self.vertical_left_button-(self.vertical_left_button/10) <= self.mouse[0] <= self.vertical_left_button+self.vertical_left_button/5-self.vertical_left_button/10 and var.height/2 <= self.mouse[1] <= var.height/2+var.height/25:
+            self.switch_to_scene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 10))
+        if var.width/2-(var.width/2/10) <= self.mouse[0] <= var.width/2+var.width/2/5-var.width/2/10 and var.height/2 <= self.mouse[1] <= var.height/2+var.height/25:
             #Hard
-            self.SwitchToScene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 25))
+            self.switch_to_scene(GameScene(var.screenwidth/2, var.screenheight/2, 0, 25))
     def easy_button(self):
+        '''
+        draws the easy button
+
+        Parameters
+        ----------
+        none
+        '''
         easy_text = self.font.render('Easy', True , var.white)
-        if self.vertical_left_button-(self.vertical_left_button/10) <= self.mouse[0] <= self.vertical_left_button+self.vertical_left_button/5-self.vertical_left_button/10 and var.height/5 <= self.mouse[1] <= var.height/5+var.height/25:
-            pygame.draw.rect(var.screen,var.button_light,[self.vertical_left_button-(self.vertical_left_button/10),var.height/5,self.vertical_left_button/5-self.vertical_left_button/10,var.height/25])
+        if var.width/2-(var.width/2/10) <= self.mouse[0] <= var.width/2+var.width/2/5-var.width/2/10 and var.height/5 <= self.mouse[1] <= var.height/5+var.height/25:
+            pygame.draw.rect(var.screen,var.button_light,[var.width/2-(var.width/2/10),var.height/5,var.width/2/5-var.width/2/10,var.height/25])
         else:
-            pygame.draw.rect(var.screen,var.button_dark,[self.vertical_left_button-(self.vertical_left_button/10),var.height/5,self.vertical_left_button/5-self.vertical_left_button/10,var.height/25])
-        var.screen.blit(easy_text, (self.vertical_left_button-(self.vertical_left_button/10),var.height/5))
+            pygame.draw.rect(var.screen,var.button_dark,[var.width/2-(var.width/2/10),var.height/5,var.width/2/5-var.width/2/10,var.height/25])
+        var.screen.blit(easy_text, (var.width/2-(var.width/2/10),var.height/5))
     def normal_button(self):
+        '''
+        draws the normal button
+
+        Parameters
+        ----------
+        none
+        '''
         normal_text = self.font.render('Normal', True , var.white)
-        if self.vertical_left_button-(self.vertical_left_button/10) <= self.mouse[0] <= self.vertical_left_button+self.vertical_left_button/5-self.vertical_left_button/10 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+var.height/25:
-            pygame.draw.rect(var.screen,var.button_light,[self.vertical_left_button-(self.vertical_left_button/10),var.height/2.5,self.vertical_left_button/5-self.vertical_left_button/10,var.height/25])
+        if var.width/2-(var.width/2/10) <= self.mouse[0] <= var.width/2+var.width/2/5-var.width/2/10 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+var.height/25:
+            pygame.draw.rect(var.screen,var.button_light,[var.width/2-(var.width/2/10),var.height/2.5,var.width/2/5-var.width/2/10,var.height/25])
         else:
-            pygame.draw.rect(var.screen,var.button_dark,[self.vertical_left_button-(self.vertical_left_button/10),var.height/2.5,self.vertical_left_button/5-self.vertical_left_button/10,var.height/25])
-        var.screen.blit(normal_text, (self.vertical_left_button-(self.vertical_left_button/10),var.height/2.5))
+            pygame.draw.rect(var.screen,var.button_dark,[var.width/2-(var.width/2/10),var.height/2.5,var.width/2/5-var.width/2/10,var.height/25])
+        var.screen.blit(normal_text, (var.width/2-(var.width/2/10),var.height/2.5))
     def hard_button(self):
+        '''
+        draws the hard button
+
+        Parameters
+        ----------
+        none
+        '''
         hard_text = self.font.render('Hard', True , var.white)
-        if self.vertical_left_button-(self.vertical_left_button/10) <= self.mouse[0] <= self.vertical_left_button+self.vertical_left_button/5-self.vertical_left_button/10 and var.height/2 <= self.mouse[1] <= var.height/2+var.height/25:
-            pygame.draw.rect(var.screen,var.button_light,[self.vertical_left_button-(self.vertical_left_button/10),var.height/2,self.vertical_left_button/5-self.vertical_left_button/10,var.height/25])
+        if var.width/2-(var.width/2/10) <= self.mouse[0] <= var.width/2+var.width/2/5-var.width/2/10 and var.height/2 <= self.mouse[1] <= var.height/2+var.height/25:
+            pygame.draw.rect(var.screen,var.button_light,[var.width/2-(var.width/2/10),var.height/2,var.width/2/5-var.width/2/10,var.height/25])
         else:
-            pygame.draw.rect(var.screen,var.button_dark,[self.vertical_left_button-(self.vertical_left_button/10),var.height/2,self.vertical_left_button/5-self.vertical_left_button/10,var.height/25])
-        var.screen.blit(hard_text, (self.vertical_left_button-(self.vertical_left_button/10),var.height/2))
+            pygame.draw.rect(var.screen,var.button_dark,[var.width/2-(var.width/2/10),var.height/2,var.width/2/5-var.width/2/10,var.height/25])
+        var.screen.blit(hard_text, (var.width/2-(var.width/2/10),var.height/2))
 
 class Pause(Title):
+    """
+    A class for the game scene
+
+    ...
+
+    Attributes
+    ----------
+    previous : scene obj
+        previous scene
+    game : bool
+        check if player has died or not
+    mouse : pygame.mouse.get_pos()
+        gets mouse position
+
+    Methods
+    switch_to_scene(next=False):
+        changed to switch to previous scene with same postion of everything
+    game_over():
+        prints game over text
+    -------
+    """
     def __init__(self, previous, game=True):
         super().__init__()
         self.previous=previous
-        self.previous.Render(var.screen)
-        self.scene_name='Pause'
+        self.previous.render(var.screen)
         self.game=game
         self.mouse=pygame.mouse.get_pos()
-        
-    def ProcessInput(self, events, pressed_keys):
+    def process_input(self, events, pressed_keys):
         if pygame.key.get_pressed()[var.tab]:
-            self.SwitchToScene()
+            self.switch_to_scene()
         for event in var.events.get():
             if event.type==var.click:
                 self.quit_execute()
                 self.start_execute()
-                
-
-    def Update(self):
+    def update(self):
         pass
-    def Render(self, screen):
+    def render(self, screen):
         self.mouse=pygame.mouse.get_pos()
         if self.game:
             self.start('Resume')
@@ -253,23 +414,27 @@ class Pause(Title):
     def start_execute(self):
         if self.game:
             if var.width/2 <= self.mouse[0] <= var.width/2+160 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+40:
-                self.SwitchToScene()
+                self.switch_to_scene()
         else:
             if var.width/2 <= self.mouse[0] <= var.width/2+160 and var.height/2.5 <= self.mouse[1] <= var.height/2.5+40:
-                self.SwitchToScene(Title())
-    def SwitchToScene(self, next=False):
-        if next:
-            self.next=next
+                self.switch_to_scene(Title())
+    def switch_to_scene(self, next_scene=False):
+        if next_scene:
+            self.next=next_scene
         else:
             e_cord=[]
             for i in self.previous.bad:
                 e_cord.append(i)
-            self.next=GameScene(self.previous.pc.x, self.previous.pc.y, e_cord, self.previous.number, self.previous.pc.health, self.previous.pc.mana, self.previous.pc.kill)
+            self.next=GameScene(self.previous.pc.x, self.previous.pc.y, e_cord, self.previous.number, self.previous.pc.health, self.previous.pc.mana, len(self.previous.pc.point))
     def gameover(self):
+        '''
+        Writes gameover text
+
+        Parameters
+        ----------
+        none
+        '''
         pygame.font.init()
         font= pygame.font.SysFont('Arial', 72)
         game_over_text = font.render('Game Over' , True , var.white)
-        var.screen.blit(game_over_text, (var.width,var.height/1.5))
-        self.previous.pc.score(100, 50, 72)
-
-        
+        var.screen.blit(game_over_text, (var.screenwidth/3, var.screenheight/3))
